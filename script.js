@@ -466,12 +466,10 @@ function initializeCodeCopy() {
 
 // Update last updated date
 function updateLastUpdated() {
-    const versionData = getVersionData(currentVersion);
-    if (versionData && versionData.releaseDate) {
-        document.getElementById('lastUpdated').textContent = versionData.releaseDate;
-    } else {
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
-    }
+    // Always show today's date
+    const today = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('lastUpdated').textContent = today.toLocaleDateString('en-US', options);
 }
 
 // Initialize sidebar for mobile
