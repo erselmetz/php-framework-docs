@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload - PHP Framework Documentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles-light.css">
+    <link rel="stylesheet" href="styles-dark.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-code-slash"></i> PHP Framework
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="topNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button id="themeToggleBtn" class="btn theme-toggle-btn ms-2" title="Toggle Dark Mode">
+                            <i class="bi bi-moon"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="versionDropdown" data-bs-toggle="dropdown">
+                            <i class="bi bi-tag"></i> <span id="currentVersion">v2.0.0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" id="versionList"></ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="getting-started.html">
+                                <i class="bi bi-rocket-takeoff"></i> Getting Started
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link sidebar-heading">Version History</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#overview">
+                                <i class="bi bi-info-circle"></i> Overview
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#features">
+                                <i class="bi bi-star"></i> Features
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#comparison">
+                                <i class="bi bi-arrow-left-right"></i> Comparison
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#changelog">
+                                <i class="bi bi-clock-history"></i> Changelog
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link sidebar-heading">Tutorials</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tutorial-routing.html">
+                                <i class="bi bi-router"></i> Routing
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tutorial-database.html">
+                                <i class="bi bi-database"></i> Database
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tutorial-validation.html">
+                                <i class="bi bi-check2-square"></i> Validation
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tutorial-views.html">
+                                <i class="bi bi-view-stacked"></i> Views
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tutorial-csrf.html">
+                                <i class="bi bi-shield-check"></i> CSRF Protection
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="tutorial-upload.html">
+                                <i class="bi bi-file-earmark-arrow-up"></i> File Upload
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">File Upload</h1>
+                    <div class="version-badge-single">
+                        <span class="badge bg-secondary fs-6 px-3 py-2" id="tutorialVersionBadge">v2.0.0</span>
+                    </div>
+                </div>
+
+                <div id="tutorialContent">
+                    <!-- Tutorial content will be loaded dynamically here -->
+                </div>
+
+                <!-- Fallback content (will be replaced by dynamic content) -->
+                <section class="content-section" style="display: none;">
+                    <h2>Handling File Uploads</h2>
+                    <p>Use the Upload class to handle file uploads with validation.</p>
+                    
+                    <div class="code-block-wrapper">
+                        <div class="code-header d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Controller</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="upload1">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="upload1" class="code-block"><code>&lt;?php
+
+use Core\Upload;
+
+class FileController extends Controller
+{
+    public function upload()
+    {
+        try {
+            $file = Upload::make('file')
+                ->allowed(['jpg', 'jpeg', 'png', 'pdf'])
+                ->maxSize(5242880) // 5MB in bytes
+                ->path('storage/uploads')
+                ->store();
+            
+            return $this->success([
+                'filename' => $file,
+                'url' => assets('uploads/' . $file)
+            ], 'File uploaded successfully');
+            
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 400);
+        }
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="explanation-box mt-3">
+                        <strong><i class="bi bi-info-circle"></i> Upload Methods:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li><code>make('field')</code>: Specify the file input name from the form</li>
+                            <li><code>allowed(['ext1', 'ext2'])</code>: Set allowed file extensions</li>
+                            <li><code>maxSize(bytes)</code>: Set maximum file size (1MB = 1048576 bytes)</li>
+                            <li><code>path('directory')</code>: Set upload directory relative to project root</li>
+                            <li><code>store()</code>: Saves the file and returns the filename</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Form Example</h2>
+                    <p>Create a form with file input for uploading.</p>
+                    
+                    <div class="code-block-wrapper">
+                        <div class="code-header d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">View file</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="upload2">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="upload2" class="code-block"><code>&lt;form method="POST" action="&lt;?= route('file.upload') ?&gt;" enctype="multipart/form-data"&gt;
+    &lt;?= csrf_field() ?&gt;
+    
+    &lt;div class="form-group"&gt;
+        &lt;label for="file"&gt;Select File:&lt;/label&gt;
+        &lt;input type="file" id="file" name="file" required&gt;
+    &lt;/div&gt;
+    
+    &lt;button type="submit"&gt;Upload&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;!-- Important: enctype="multipart/form-data" is required for file uploads --&gt;</code></pre>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>File Size Conversion</h2>
+                    <p>Common file size values for reference.</p>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Size</th>
+                                    <th>Bytes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1 KB</td>
+                                    <td>1,024</td>
+                                </tr>
+                                <tr>
+                                    <td>1 MB</td>
+                                    <td>1,048,576</td>
+                                </tr>
+                                <tr>
+                                    <td>5 MB</td>
+                                    <td>5,242,880</td>
+                                </tr>
+                                <tr>
+                                    <td>10 MB</td>
+                                    <td>10,485,760</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-4 bg-light border-top">
+        <div class="container-fluid">
+            <div class="text-center text-muted">
+                <p class="mb-0">&copy; 2024 PHP Framework. Documentation</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="theme-switcher.js"></script>
+    <script src="versions/v1.0.0.js"></script>
+    <script src="versions/v2.0.0.js"></script>
+    <script src="versions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
