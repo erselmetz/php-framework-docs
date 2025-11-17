@@ -6,8 +6,8 @@ const versionHistory = {};
 // Version registry - maps version strings to their data objects
 // Only include released/stable versions
 const versionRegistry = {
-    'v1.0.0': () => version1_0_0,
-    'v2.0.0': () => version2_0_0
+    'v1.0.0-beta': () => version1_0_0_beta,
+    'v1.1.0-beta': () => version1_1_0_beta
 };
 
 // Initialize version history from registry

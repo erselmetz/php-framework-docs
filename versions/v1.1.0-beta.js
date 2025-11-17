@@ -1,6 +1,6 @@
 // Version 2.0.0 Data
-const version2_0_0 = {
-    version: 'v2.0.0',
+const version1_1_0_beta = {
+    version: 'v1.1.0-beta',
     releaseDate: '2024-02-15',
     status: 'stable',
     description: 'Major improvements in code quality, performance, and developer experience.',
@@ -215,7 +215,7 @@ try {
                         '<code>orderBy(\'column\')</code>: Adds ORDER BY clause',
                         '<code>limit(number)</code>: Limits the number of results',
                         '<code>get()</code>: Executes the query and returns array of results',
-                        '<strong>New in v2.0.0:</strong> Enhanced error handling with Logger integration'
+                        '<strong>New in v1.1.0-beta:</strong> Enhanced error handling with Logger integration'
                     ]
                 },
                 {
@@ -252,7 +252,7 @@ class UserController extends Controller
             sections: [
                 {
                     heading: 'Validating Input',
-                    content: 'Use the validator to validate form data with rules. Enhanced with better error handling in v2.0.0.',
+                    content: 'Use the validator to validate form data with rules. Enhanced with better error handling in v1.1.0-beta.',
                     code: `<?php
 
 use Core\Logger;
@@ -279,7 +279,7 @@ try {
                         '<code>max:X</code>: Maximum length for strings',
                         '<code>email</code>: Must be valid email format',
                         '<code>unique:table</code>: Must be unique in the specified table',
-                        '<strong>New in v2.0.0:</strong> Enhanced error logging for validation failures'
+                        '<strong>New in v1.1.0-beta:</strong> Enhanced error logging for validation failures'
                     ]
                 }
             ]
@@ -362,7 +362,7 @@ return [
             sections: [
                 {
                     heading: 'Handling File Uploads',
-                    content: 'Use the Upload class to handle file uploads with validation. Enhanced error handling in v2.0.0.',
+                    content: 'Use the Upload class to handle file uploads with validation. Enhanced error handling in v1.1.0-beta.',
                     code: `<?php
 
 use Core\Upload;
@@ -390,7 +390,7 @@ try {
                         '<code>maxSize(bytes)</code>: Set maximum file size (1MB = 1048576 bytes)',
                         '<code>path(\'directory\')</code>: Set upload directory relative to project root',
                         '<code>store()</code>: Saves the file and returns the filename',
-                        '<strong>New in v2.0.0:</strong> Enhanced error handling with Logger integration'
+                        '<strong>New in v1.1.0-beta:</strong> Enhanced error handling with Logger integration'
                     ]
                 }
             ]

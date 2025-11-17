@@ -1,6 +1,6 @@
 // Version 1.0.0 Data
-const version1_0_0 = {
-    version: 'v1.0.0',
+const version1_0_0_beta = {
+    version: 'v1.0.0-beta',
     releaseDate: '2024-01-01',
     status: 'stable',
     description: 'Initial release of PHP Framework with core features.',
