@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     initializeSidebar();
     
+    // Set current year dynamically
+    setCurrentYear();
+    
     // Preserve version in tutorial links when on tutorial pages
     if (isTutorialPage) {
         preserveVersionInLinks();
@@ -630,6 +633,15 @@ function updateVersionForTutorial(version) {
         // Update tutorial links to preserve version
         preserveVersionInLinks();
     }
+}
+
+// Set current year dynamically
+function setCurrentYear() {
+    const yearElements = document.querySelectorAll('#currentYear, .current-year');
+    const currentYear = new Date().getFullYear();
+    yearElements.forEach(el => {
+        el.textContent = currentYear;
+    });
 }
 
 // Console message
