@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Views - PHP Framework Documentation</title>
+    <title>Routing - PHP Framework Documentation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="styles-light.css">
-    <link rel="stylesheet" href="styles-dark.css">
+    <link rel="stylesheet" href="../assets/css/styles-light.css">
+    <link rel="stylesheet" href="../assets/css/styles-dark.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="../index.html">
                 <i class="bi bi-code-slash"></i> PHP Framework
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
@@ -42,12 +42,12 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="../index.html">
                                 <i class="bi bi-house"></i> Home
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="getting-started.html">
+                            <a class="nav-link" href="../getting-started.html">
                                 <i class="bi bi-rocket-takeoff"></i> Getting Started
                             </a>
                         </li>
@@ -55,22 +55,22 @@
                             <span class="nav-link sidebar-heading">Version History</span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html#overview">
+                            <a class="nav-link" href="../index.html#overview">
                                 <i class="bi bi-info-circle"></i> Overview
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html#features">
+                            <a class="nav-link" href="../index.html#features">
                                 <i class="bi bi-star"></i> Features
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html#comparison">
+                            <a class="nav-link" href="../index.html#comparison">
                                 <i class="bi bi-arrow-left-right"></i> Comparison
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html#changelog">
+                            <a class="nav-link" href="../index.html#changelog">
                                 <i class="bi bi-clock-history"></i> Changelog
                             </a>
                         </li>
@@ -78,7 +78,7 @@
                             <span class="nav-link sidebar-heading">Tutorials</span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="tutorial-routing.html">
+                            <a class="nav-link active" href="tutorial-routing.html">
                                 <i class="bi bi-router"></i> Routing
                             </a>
                         </li>
@@ -93,7 +93,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="tutorial-views.html">
+                            <a class="nav-link" href="tutorial-views.html">
                                 <i class="bi bi-view-stacked"></i> Views
                             </a>
                         </li>
@@ -113,7 +113,7 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Views & Templates</h1>
+                    <h1 class="h2">Routing</h1>
                     <div class="version-badge-single">
                         <span class="badge bg-secondary fs-6 px-3 py-2" id="tutorialVersionBadge">v2.0.0</span>
                     </div>
@@ -125,115 +125,167 @@
 
                 <!-- Fallback content (will be replaced by dynamic content) -->
                 <section class="content-section" style="display: none;">
-                    <h2>Rendering Views</h2>
-                    <p>Use the <code>view()</code> method to render templates with data.</p>
+                    <h2>Defining Routes</h2>
+                    <p>Routes are defined in <code>routes.php</code>. Each route needs a method, path, controller, and action.</p>
                     
                     <div class="code-block-wrapper">
                         <div class="code-header d-flex justify-content-between align-items-center">
-                            <span class="text-muted small">Controller</span>
-                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="view1">
+                            <span class="text-muted small">routes.php</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="route1">
                                 <i class="bi bi-clipboard"></i> Copy
                             </button>
                         </div>
-                        <pre id="view1" class="code-block"><code>&lt;?php
+                        <pre id="route1" class="code-block"><code>&lt;?php
 
-class UserController extends Controller
+return [
+    'home' => [
+        'method' => 'GET',
+        'path' => '/',
+        'controller' => 'html',
+        'action' => 'index',
+    ],
+    'user.show' => [
+        'method' => 'GET',
+        'path' => '/user/{id}',
+        'controller' => 'user',
+        'action' => 'show',
+    ],
+    'user.store' => [
+        'method' => 'POST',
+        'path' => '/user',
+        'controller' => 'user',
+        'action' => 'store',
+        'middleware' => ['csrf', 'auth']
+    ],
+];</code></pre>
+                    </div>
+
+                    <div class="explanation-box mt-3">
+                        <strong><i class="bi bi-info-circle"></i> Route Parameters:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li><code>method</code>: HTTP method (GET, POST, PUT, DELETE)</li>
+                            <li><code>path</code>: URL pattern with optional parameters like <code>{id}</code></li>
+                            <li><code>controller</code>: Controller class name (without .php extension)</li>
+                            <li><code>action</code>: Method name in the controller</li>
+                            <li><code>middleware</code>: Array of middleware to run before the action (optional)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="content-section">
+                    <h2>Route Parameters</h2>
+                    <p>Routes can accept parameters in the URL path using curly braces.</p>
+                    
+                    <div class="code-block-wrapper">
+                        <div class="code-header d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">routes.php</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="route2">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="route2" class="code-block"><code>&lt;?php
+
+return [
+    'post.show' => [
+        'method' => 'GET',
+        'path' => '/post/{id}',
+        'controller' => 'post',
+        'action' => 'show',
+    ],
+    'user.profile' => [
+        'method' => 'GET',
+        'path' => '/user/{id}/profile',
+        'controller' => 'user',
+        'action' => 'profile',
+    ],
+];</code></pre>
+                    </div>
+
+                    <div class="code-block-wrapper mt-3">
+                        <div class="code-header d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Controller</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="route3">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                        <pre id="route3" class="code-block"><code>&lt;?php
+
+class Post extends Controller
 {
-    protected $layout = 'main'; // Default layout
-    
     public function show($params)
     {
-        $user = User::find($params[0]);
+        // $params[0] contains the {id} value
+        $id = $params[0] ?? null;
         
-        // Render view with data
-        $this->view('user/show', [
-            'user' => $user,
-            'title' => 'User Profile'
-        ]);
-    }
-    
-    public function edit($params)
-    {
-        // Use different layout
-        $this->view('user/edit', [
-            'user' => User::find($params[0])
-        ], 'admin'); // Custom layout
+        // Use the ID to fetch the post
+        $post = PostModel::find($id);
+        
+        $this->view('post/show', ['post' => $post]);
     }
 }</code></pre>
                     </div>
                 </section>
 
                 <section class="content-section">
-                    <h2>View File Example</h2>
-                    <p>Access data passed from controller in your view files.</p>
+                    <h2>Generating URLs</h2>
+                    <p>Use the <code>route()</code> helper function to generate URLs from named routes.</p>
                     
                     <div class="code-block-wrapper">
                         <div class="code-header d-flex justify-content-between align-items-center">
-                            <span class="text-muted small">app/views/user/show.php</span>
-                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="view2">
+                            <span class="text-muted small">View file</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="route4">
                                 <i class="bi bi-clipboard"></i> Copy
                             </button>
                         </div>
-                        <pre id="view2" class="code-block"><code>&lt;h1&gt;&lt;?= htmlspecialchars($title ?? 'User Profile', ENT_QUOTES, 'UTF-8') ?&gt;&lt;/h1&gt;
+                        <pre id="route4" class="code-block"><code>&lt;!-- Generate URL for home route --&gt;
+&lt;a href="&lt;?= route('home') ?&gt;"&gt;Home&lt;/a&gt;
+&lt;!-- Returns: / --&gt;
 
-&lt;?php if ($user): ?&gt;
-    &lt;div class="user-info"&gt;
-        &lt;p&gt;&lt;strong&gt;Name:&lt;/strong&gt; &lt;?= htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8') ?&gt;&lt;/p&gt;
-        &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; &lt;?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?&gt;&lt;/p&gt;
-    &lt;/div&gt;
-&lt;?php else: ?&gt;
-    &lt;p&gt;User not found&lt;/p&gt;
-&lt;?php endif; ?&gt;
+&lt;!-- Generate URL with parameters --&gt;
+&lt;a href="&lt;?= route('user.show', ['id' => 123]) ?&gt;"&gt;View User&lt;/a&gt;
+&lt;!-- Returns: /user/123 --&gt;
 
-&lt;!-- Use helper functions --&gt;
-&lt;a href="&lt;?= route('user.edit', ['id' => $user['id']]) ?&gt;"&gt;Edit&lt;/a&gt;
-&lt;link rel="stylesheet" href="&lt;?= assets('css/style.css') ?&gt;"&gt;</code></pre>
+&lt;!-- Multiple parameters --&gt;
+&lt;a href="&lt;?= route('user.profile', ['id' => 123, 'tab' => 'settings']) ?&gt;"&gt;Profile&lt;/a&gt;</code></pre>
                     </div>
                 </section>
 
                 <section class="content-section">
-                    <h2>Layouts</h2>
-                    <p>Layouts provide a consistent structure for your views.</p>
+                    <h2>Middleware</h2>
+                    <p>Apply middleware to routes for authentication, CSRF protection, and more.</p>
                     
                     <div class="code-block-wrapper">
                         <div class="code-header d-flex justify-content-between align-items-center">
-                            <span class="text-muted small">app/views/layouts/main.php</span>
-                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="view3">
+                            <span class="text-muted small">routes.php</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="route5">
                                 <i class="bi bi-clipboard"></i> Copy
                             </button>
                         </div>
-                        <pre id="view3" class="code-block"><code>&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;&lt;?= htmlspecialchars($title ?? 'App', ENT_QUOTES, 'UTF-8') ?&gt;&lt;/title&gt;
-    &lt;link rel="stylesheet" href="&lt;?= assets('css/style.css') ?&gt;"&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;header&gt;
-        &lt;nav&gt;
-            &lt;a href="&lt;?= route('home') ?&gt;"&gt;Home&lt;/a&gt;
-        &lt;/nav&gt;
-    &lt;/header&gt;
-    
-    &lt;main&gt;
-        &lt;?= $content ?? '' ?&gt;
-    &lt;/main&gt;
-    
-    &lt;footer&gt;
-        &lt;p&gt;&copy; &lt;?= date('Y') ?&gt; My App&lt;/p&gt;
-    &lt;/footer&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
+                        <pre id="route5" class="code-block"><code>&lt;?php
+
+return [
+    'admin.dashboard' => [
+        'method' => 'GET',
+        'path' => '/admin',
+        'controller' => 'admin',
+        'action' => 'dashboard',
+        'middleware' => ['auth']  // Requires authentication
+    ],
+    'user.update' => [
+        'method' => 'POST',
+        'path' => '/user/{id}',
+        'controller' => 'user',
+        'action' => 'update',
+        'middleware' => ['csrf', 'auth']  // CSRF + Auth
+    ],
+];</code></pre>
                     </div>
 
-                    <div class="explanation-box mt-3">
-                        <strong><i class="bi bi-info-circle"></i> How Layouts Work:</strong>
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="bi bi-info-circle"></i> Available Middleware:</strong>
                         <ul class="mb-0 mt-2">
-                            <li>Layout files are stored in <code>app/views/layouts/</code></li>
-                            <li>The view content is inserted into <code>$content</code> variable</li>
-                            <li>You can set a default layout in the controller with <code>protected $layout</code></li>
-                            <li>Override layout per view by passing it as third parameter</li>
+                            <li><code>auth</code>: Redirects unauthenticated users to login</li>
+                            <li><code>csrf</code>: Validates CSRF token on POST/PUT/DELETE requests</li>
                         </ul>
                     </div>
                 </section>
@@ -250,11 +302,11 @@ class UserController extends Controller
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="theme-switcher.js"></script>
-    <script src="versions/v1.0.0.js"></script>
-    <script src="versions/v2.0.0.js"></script>
-    <script src="versions.js"></script>
-    <script src="script.js"></script>
+    <script src="../assets/js/theme-switcher.js"></script>
+    <script src="../versions/v1.0.0.js"></script>
+    <script src="../versions/v2.0.0.js"></script>
+    <script src="../assets/js/versions.js"></script>
+    <script src="../assets/js/script.js"></script>
 </body>
 </html>
 

@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSRF Protection - PHP Framework Documentation</title>
+    <title>Database - PHP Framework Documentation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="styles-light.css">
-    <link rel="stylesheet" href="styles-dark.css">
+    <link rel="stylesheet" href="../assets/css/styles-light.css">
+    <link rel="stylesheet" href="../assets/css/styles-dark.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="../index.html">
                 <i class="bi bi-code-slash"></i> PHP Framework
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
@@ -42,12 +42,12 @@
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="../index.html">
                                 <i class="bi bi-house"></i> Home
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="getting-started.html">
+                            <a class="nav-link" href="../getting-started.html">
                                 <i class="bi bi-rocket-takeoff"></i> Getting Started
                             </a>
                         </li>
@@ -83,7 +83,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="tutorial-database.html">
+                            <a class="nav-link active" href="tutorial-database.html">
                                 <i class="bi bi-database"></i> Database
                             </a>
                         </li>
@@ -98,7 +98,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="tutorial-csrf.html">
+                            <a class="nav-link" href="tutorial-csrf.html">
                                 <i class="bi bi-shield-check"></i> CSRF Protection
                             </a>
                         </li>
@@ -113,7 +113,7 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">CSRF Protection</h1>
+                    <h1 class="h2">Database Query Builder</h1>
                     <div class="version-badge-single">
                         <span class="badge bg-secondary fs-6 px-3 py-2" id="tutorialVersionBadge">v2.0.0</span>
                     </div>
@@ -125,94 +125,152 @@
 
                 <!-- Fallback content (will be replaced by dynamic content) -->
                 <section class="content-section" style="display: none;">
-                    <h2>What is CSRF?</h2>
-                    <p>Cross-Site Request Forgery (CSRF) is an attack that forces authenticated users to submit a request to a web application in which they are currently authenticated.</p>
-                    <p>This framework protects against CSRF attacks by requiring a token for all state-changing requests (POST, PUT, DELETE).</p>
-                </section>
-
-                <section class="content-section">
-                    <h2>Adding CSRF Token to Forms</h2>
-                    <p>Protect your forms from CSRF attacks by including a CSRF token.</p>
+                    <h2>Basic Queries</h2>
+                    <p>The query builder provides a fluent interface for building database queries.</p>
                     
                     <div class="code-block-wrapper">
                         <div class="code-header d-flex justify-content-between align-items-center">
-                            <span class="text-muted small">View file</span>
-                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="csrf1">
+                            <span class="text-muted small">Controller</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="db1">
                                 <i class="bi bi-clipboard"></i> Copy
                             </button>
                         </div>
-                        <pre id="csrf1" class="code-block"><code>&lt;form method="POST" action="&lt;?= route('user.store') ?&gt;"&gt;
-    &lt;?= csrf_field() ?&gt;
-    
-    &lt;input type="text" name="name" required&gt;
-    &lt;input type="email" name="email" required&gt;
-    &lt;input type="password" name="password" required&gt;
-    
-    &lt;button type="submit"&gt;Submit&lt;/button&gt;
-&lt;/form&gt;</code></pre>
+                        <pre id="db1" class="code-block"><code>&lt;?php
+
+use Connection\Database;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        // Get all users
+        $users = Database::table('users')->get();
+        
+        // Get users with conditions
+        $activeUsers = Database::table('users')
+            ->where('status = "active"')
+            ->orderBy('created_at DESC')
+            ->limit(10)
+            ->get();
+        
+        // Get specific columns
+        $emails = Database::table('users')
+            ->select('id, email, name')
+            ->get();
+        
+        return $this->json($users);
+    }
+}</code></pre>
                     </div>
 
                     <div class="explanation-box mt-3">
-                        <strong><i class="bi bi-info-circle"></i> How it works:</strong>
+                        <strong><i class="bi bi-info-circle"></i> Query Builder Methods:</strong>
                         <ul class="mb-0 mt-2">
-                            <li><code>csrf_field()</code>: Generates a hidden input with the CSRF token automatically</li>
-                            <li>The token is stored in the session and validated on each POST request</li>
-                            <li>If the token doesn't match, the request is rejected</li>
-                            <li>Tokens are regenerated periodically for security</li>
+                            <li><code>table('name')</code>: Sets the table name</li>
+                            <li><code>select('columns')</code>: Specify columns to select (default: *)</li>
+                            <li><code>where('condition')</code>: Adds WHERE clause</li>
+                            <li><code>andWhere('condition')</code>: Adds additional WHERE conditions</li>
+                            <li><code>orderBy('column')</code>: Adds ORDER BY clause</li>
+                            <li><code>limit(number)</code>: Limits the number of results</li>
+                            <li><code>get()</code>: Executes the query and returns array of results</li>
                         </ul>
                     </div>
                 </section>
 
                 <section class="content-section">
-                    <h2>Manual Token Usage</h2>
-                    <p>You can also get the token value directly if needed.</p>
+                    <h2>Using Models</h2>
+                    <p>Models provide a cleaner interface for database operations.</p>
                     
                     <div class="code-block-wrapper">
                         <div class="code-header d-flex justify-content-between align-items-center">
-                            <span class="text-muted small">View file</span>
-                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="csrf2">
+                            <span class="text-muted small">Controller</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="db2">
                                 <i class="bi bi-clipboard"></i> Copy
                             </button>
                         </div>
-                        <pre id="csrf2" class="code-block"><code>&lt;!-- Get token value --&gt;
-&lt;input type="hidden" name="_token" value="&lt;?= csrf_token() ?&gt;"&gt;
+                        <pre id="db2" class="code-block"><code>&lt;?php
 
-&lt;!-- For AJAX requests --&gt;
-&lt;script&gt;
-    fetch('/api/endpoint', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': '&lt;?= csrf_token() ?&gt;'
-        },
-        body: JSON.stringify({ data: 'value' })
-    });
-&lt;/script&gt;</code></pre>
+class UserController extends Controller
+{
+    public function show($params)
+    {
+        $id = $params[0] ?? null;
+        
+        // Find user by ID
+        $user = User::find($id);
+        
+        if (!$user) {
+            return $this->error('User not found', 404);
+        }
+        
+        // Find by email
+        $user = User::findByEmail('user@example.com');
+        
+        // Get all users
+        $users = User::all();
+        
+        // Create new user
+        $newUser = User::create([
+            'name' => 'John Doe',
+            'email' => 'john@example.com',
+            'password' => 'secure_password'
+        ]);
+        
+        return $this->json($user);
+    }
+}</code></pre>
                     </div>
                 </section>
 
                 <section class="content-section">
-                    <h2>Protecting Routes</h2>
-                    <p>Add CSRF middleware to routes that handle form submissions.</p>
+                    <h2>Security: Escaping Input</h2>
+                    <p class="text-danger"><strong>Important:</strong> Always escape user input to prevent SQL injection.</p>
                     
                     <div class="code-block-wrapper">
                         <div class="code-header d-flex justify-content-between align-items-center">
-                            <span class="text-muted small">routes.php</span>
-                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="csrf3">
+                            <span class="text-muted small">Controller</span>
+                            <button class="btn btn-sm btn-outline-secondary copy-btn" data-target="db3">
                                 <i class="bi bi-clipboard"></i> Copy
                             </button>
                         </div>
-                        <pre id="csrf3" class="code-block"><code>&lt;?php
+                        <pre id="db3" class="code-block"><code>&lt;?php
 
-return [
-    'user.store' => [
-        'method' => 'POST',
-        'path' => '/user',
-        'controller' => 'user',
-        'action' => 'store',
-        'middleware' => ['csrf']  // CSRF protection
-    ],
-];</code></pre>
+use Connection\Database;
+
+class UserController extends Controller
+{
+    public function search()
+    {
+        global $database;
+        
+        // Get user input
+        $searchTerm = $_GET['q'] ?? '';
+        
+        // Create connection for escaping
+        $db = new mysqli(
+            $database['host'],
+            $database['username'],
+            $database['password'],
+            $database['dbname']
+        );
+        
+        // Escape the input
+        $safeSearch = $db->real_escape_string($searchTerm);
+        $db->close();
+        
+        // Use in query
+        $users = Database::table('users')
+            ->where("name LIKE '%{$safeSearch}%'")
+            ->get();
+        
+        return $this->json($users);
+    }
+}</code></pre>
+                    </div>
+
+                    <div class="alert alert-warning mt-3">
+                        <strong><i class="bi bi-exclamation-triangle"></i> Security Warning:</strong>
+                        Never use user input directly in queries. Always escape it using <code>real_escape_string()</code> or use prepared statements.
                     </div>
                 </section>
             </main>
@@ -228,11 +286,12 @@ return [
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="theme-switcher.js"></script>
-    <script src="versions/v1.0.0.js"></script>
-    <script src="versions/v2.0.0.js"></script>
-    <script src="versions.js"></script>
-    <script src="script.js"></script>
+    <script src="../assets/js/theme-switcher.js"></script>
+    <script src="../versions/v1.0.0.js"></script>
+    <script src="../versions/v2.0.0.js"></script>
+    <script src="../assets/js/versions.js"></script>
+    <script src="../assets/js/script.js"></script>
 </body>
 </html>
+
 
